@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Qualipix — Projetos de Video Wall Corporativo</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  
+  <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Space Grotesk', 'sans-serif'],
+            mono: ['Space Mono', 'monospace'],
+          },
+          colors: {
+            blue: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              200: '#bfdbfe',
+              300: '#93c5fd',
+              400: '#60a5fa',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
+              950: '#172554',
+            },
+            slate: {
+              50: '#f8fafc',
+              100: '#f1f5f9',
+              200: '#e2e8f0',
+              300: '#cbd5e1',
+              400: '#94a3b8',
+              500: '#64748b',
+              600: '#475569',
+              700: '#334155',
+              800: '#1e293b',
+              900: '#0f172a',
+              950: '#020617',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      overflow-x: hidden;
+      background-color: #f8fafc;
+      color: #0f172a;
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 3px; }
+
+    .scroll-progress {
+      position: fixed; top: 0; left: 0; z-index: 999;
+      height: 3px; background: #2563eb; width: 100%;
+      transform-origin: left; transform: scaleX(0);
+    }
+
+    .glass-nav {
+      background: rgba(255, 255, 255, 0.65);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      box-shadow: 0 10px 40px rgba(148, 163, 184, 0.16);
+    }
+
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      box-shadow: 0 24px 70px rgba(148, 163, 184, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+      transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+    .glass-panel:hover {
+      background: rgba(255, 255, 255, 0.8);
+      border-color: rgba(255, 255, 255, 1);
+    }
+
+    /* In-view Animation Logic */
+    @keyframes animationIn {
+      0% { opacity: 0; transform: translateY(30px); filter: blur(8px); }
+      100% { opacity: 1; transform: translateY(0); filter: blur(0px); }
+    }
+    .animate-on-scroll {
+      opacity: 0;
+      animation: animationIn 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+      animation-play-state: paused !important;
+    }
+    .animate-on-scroll.animate {
+      animation-play-state: running !important;
+    }
+    .delay-100 { animation-delay: 100ms; }
+    .delay-200 { animation-delay: 200ms; }
+    .delay-300 { animation-delay: 300ms; }
+    .delay-400 { animation-delay: 400ms; }
+    
+    @keyframes cinematicEntrance {
+      0% { transform: scale(1.05); filter: blur(10px); opacity: 0; }
+      100% { transform: scale(1); filter: blur(0px); opacity: 1; }
+    }
+    .animate-cinematic { animation: cinematicEntrance 2s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+
+    /* Flywheel Section */
+    .timeline-wrapper {
+      position: relative;
+      display: flex;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    
+    .flywheel-col {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      width: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      overflow: hidden;
+    }
+
+    /* Clean corporate background for flywheel */
+    .flywheel-bg-image {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background-image: url('https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2000&auto=format&fit=crop');
+      background-size: cover;
+      background-position: center;
+      opacity: 0.15;
+    }
+    
+    .flywheel-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: radial-gradient(ellipse at center, rgba(255,255,255,0.2) 0%, rgba(241,245,249,0.95) 100%);
+    }
+
+    /* Flywheel Ring */
+    .ring-satellites {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px dashed rgba(59,130,246,0.3);
+    }
+    
+    .glow-pulse-ring {
+      position: absolute;
+      width: 110%; height: 110%;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(59,130,246,0.05), transparent);
+      animation: pulseRing 4s infinite alternate;
+    }
+
+    @keyframes pulseRing {
+      0% { opacity: 0.4; transform: scale(0.95); }
+      100% { opacity: 0.8; transform: scale(1.05); }
+    }
+
+    #flywheel {
+      transform: rotate(var(--wheel-rot, 0deg));
+      transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+      position: relative;
+      z-index: 10;
+    }
+
+    .node-wrapper {
+      transform: rotate(var(--deg)) translate(235px);
+      transition: transform 0.3s ease-out;
+    }
+
+    .node-content {
+      width: 58px; height: 58px;
+      margin-left: -29px; margin-top: -29px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      box-shadow: 0 4px 12px rgba(148, 163, 184, 0.15);
+      cursor: pointer;
+      font-weight: 600;
+      font-family: 'Space Mono', monospace;
+      color: #64748b;
+
+      /* Rotação e Escala independentes para contra-rotacionar os textos perfeitamente */
+      rotate: calc(-1 * (var(--deg) + var(--wheel-rot, 0deg)));
+      scale: 1;
+
+      transition: rotate 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+                  scale 0.3s ease,
+                  background 0.3s ease,
+                  box-shadow 0.3s ease,
+                  color 0.3s ease,
+                  border-color 0.3s ease;
+    }
+
+    .node-content:hover {
+      border-color: #3b82f6;
+      scale: 1.08;
+      background: white;
+      box-shadow: 0 8px 24px rgba(59, 130, 246, 0.2);
+      color: #0f172a;
+    }
+
+    .node-content.active {
+      border-color: #2563eb;
+      background: #2563eb;
+      color: white;
+      box-shadow: 0 8px 24px rgba(37, 99, 235, 0.3);
+      scale: 1.12;
+    }
+
+    .node-number { font-size: 0.9rem; font-weight: 700; letter-spacing: 1px; color: inherit; }
+    .node-icon { font-size: 1.1rem; margin-bottom: 2px; }
+
+    .content-col {
+      width: 50%;
+      padding: 40vh 4rem 40vh 3rem;
+      position: relative;
+      z-index: 10;
+    }
+
+    .day-card {
+      opacity: 0.25;
+      transition: opacity 0.6s ease, transform 0.4s;
+      margin-bottom: 40vh;
+      transform: translateY(20px);
+      background: rgba(255, 255, 255, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      border-radius: 1.5rem;
+      padding: 2.5rem;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 10px 40px rgba(148, 163, 184, 0.1);
+    }
+
+    .day-card.active-day {
+      opacity: 1;
+      transform: translateY(0);
+      border-color: rgba(59, 130, 246, 0.4);
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 20px 60px rgba(59, 130, 246, 0.15), inset 0 1px 0 rgba(255, 255, 255, 1);
+    }
+
+    @media (max-width: 1024px) {
+      .node-wrapper { transform: rotate(var(--deg)) translate(170px); }
+      #flywheel { width: 340px; height: 340px; }
+      .content-col { padding: 30vh 2rem 30vh 1.5rem; }
+      .node-content { width: 48px; height: 48px; margin-left: -24px; margin-top: -24px; }
+      .node-number { font-size: 0.75rem; }
+      .day-card { padding: 1.5rem; }
+    }
+
+    @media (max-width: 768px) {
+      .timeline-wrapper { flex-direction: column; }
+      .flywheel-col {
+        position: fixed;
+        left: 0; top: 0;
+        width: 80px; height: 100vh;
+        border-right: 1px solid rgba(226, 232, 240, 0.8);
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(12px);
+        pointer-events: none;
+      }
+      #flywheel { position: absolute; left: -120px; top: 50%; margin-top: -140px; transform-origin: center; }
+      .content-col { width: 100%; padding: 15vh 1.5rem 15vh 100px; }
+      .indicator-text { display: none; }
+      .node-content { pointer-events: auto; }
+    }
+  </style>
+</head>
+<body class="antialiased bg-[#f0f4f8] text-slate-900">
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <!-- Background base -->
+  <div class="fixed inset-0 z-[-1] pointer-events-none">
+    <div class="absolute inset-0 bg-gradient-to-b from-[#EAF2F8] via-[#f8fafc] to-white"></div>
+    <svg class="absolute w-full h-full opacity-[0.03]" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern height="40" id="grid" patternUnits="userSpaceOnUse" width="40">
+          <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#0f172a" stroke-width="0.5"></path>
+        </pattern>
+      </defs>
+      <rect fill="url(#grid)" height="100%" width="100%"></rect>
+    </svg>
+  </div>
+
+  <!-- Navigation -->
+  <header class="fixed top-0 left-0 right-0 z-50 w-full px-4 sm:px-6 pt-6">
+    <div class="mx-auto max-w-[72rem]">
+      <div class="glass-nav relative h-16 flex items-center justify-between rounded-full px-4 sm:px-6">
+        
+        <!-- Logo -->
+        <div class="relative z-10 flex items-center gap-3">
+          <div class="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 shadow-[0_4px_12px_rgba(37,99,235,0.3)] text-white">
+            <iconify-icon icon="solar:monitor-camera-bold-duotone" width="20" height="20"></iconify-icon>
+          </div>
+          <span class="text-lg font-display font-bold tracking-tight text-slate-900">
+            Qualipix
+          </span>
+        </div>
+
+        <!-- Links -->
+        <nav class="hidden md:flex items-center gap-2">
+          <a href="#solucoes" class="px-4 py-2 rounded-full text-[14px] font-medium text-slate-600 hover:text-slate-900 hover:bg-white/70 transition">Soluções</a>
+          <a href="#tecnologia" class="px-4 py-2 rounded-full text-[14px] font-medium text-slate-600 hover:text-slate-900 hover:bg-white/70 transition">Tecnologia</a>
+          <a href="#clientes" class="px-4 py-2 rounded-full text-[14px] font-medium text-slate-600 hover:text-slate-900 hover:bg-white/70 transition">Clientes</a>
+        </nav>
+
+        <!-- CTA -->
+        <div class="relative z-10 flex items-center gap-3">
+          <a href="#contato" class="group relative inline-flex h-10 items-center justify-center overflow-hidden rounded-full bg-blue-600 px-6 text-[14px] font-medium text-white shadow-[0_4px_14px_rgba(37,99,235,0.3)] transition-all hover:bg-blue-700 hover:shadow-[0_6px_20px_rgba(37,99,235,0.4)]">
+            <span>Fale com um Especialista</span>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section id="hero-scrub-section" class="relative min-h-screen flex flex-col justify-center pt-32 pb-20 px-6 md:px-12 overflow-hidden border-b border-slate-200">
+    <!-- Abstract ambient glow -->
+    <div class="absolute top-[20%] left-[10%] w-[500px] h-[500px] bg-blue-400/20 rounded-full blur-[100px] pointer-events-none"></div>
+    <div class="absolute bottom-[10%] right-[10%] w-[400px] h-[400px] bg-indigo-300/20 rounded-full blur-[100px] pointer-events-none"></div>
+    
+    <div class="relative z-10 max-w-[1200px] mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      
+      <!-- Text content -->
+      <div class="max-w-[640px]">
+        <div class="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white/60 backdrop-blur-md px-4 py-2 mb-8 animate-on-scroll">
+          <span class="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
+          <span class="font-mono text-[12px] font-semibold uppercase tracking-[0.15em] text-blue-700">
+            Tecnologia B2B • Infraestrutura Visual
+          </span>
+        </div>
+        
+        <h1 class="font-display text-[3.5rem] sm:text-[4.5rem] leading-[1.05] tracking-[-0.04em] text-slate-950 font-bold mb-6 animate-on-scroll delay-100">
+          A evolução visual das <span class="text-blue-600">Salas de Controle.</span>
+        </h1>
+        
+        <p class="text-[1.15rem] leading-[1.7] text-slate-600 mb-10 animate-on-scroll delay-200">
+          Projetos integrados de Video Wall para ambientes corporativos de alta exigência. Controle preciso, estabilidade para operação 24/7 e alto impacto visual em soluções Digital Signage.
+        </p>
+        
+        <div class="flex flex-col sm:flex-row gap-4 animate-on-scroll delay-300">
+          <a href="#solucoes" class="inline-flex h-14 items-center justify-center rounded-full bg-slate-900 px-8 text-[15px] font-medium text-white transition-transform hover:scale-[1.02] shadow-[0_10px_30px_rgba(15,23,42,0.2)]">
+            Conheça as Soluções
+          </a>
+          <a href="#contato" class="inline-flex h-14 items-center justify-center rounded-full border border-white/80 bg-white/60 backdrop-blur-md px-8 text-[15px] font-medium text-slate-800 transition-colors hover:bg-white shadow-sm">
+            Solicitar Projeto Customizado
+          </a>
+        </div>
+      </div>
+
+      <!-- Visual Graphic (Glass Video Wall Mockup) -->
+      <div class="relative w-full aspect-[4/3] glass-panel rounded-[2rem] p-2 flex items-center justify-center overflow-hidden animate-cinematic bg-slate-900 shadow-2xl">
+        <video id="hero-video" src="mp_.mp4" class="w-full h-full object-cover rounded-[1.5rem]" playsinline muted preload="auto"></video>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Social Proof / Clients -->
+  <section class="py-16 bg-white/40 backdrop-blur-md border-y border-white/60 relative z-20" id="clientes">
+    <div class="max-w-[1200px] mx-auto px-6 text-center">
+      <p class="font-mono text-[13px] uppercase tracking-[0.1em] text-slate-500 font-semibold mb-10 animate-on-scroll">Grandes marcas confiam na nossa infraestrutura</p>
+      
+      <div class="flex flex-wrap justify-center items-center gap-10 md:gap-20 opacity-70 grayscale hover:grayscale-0 transition-all duration-500 animate-on-scroll delay-200">
+        <!-- Text representation for logos -->
+        <div class="text-2xl font-black tracking-tighter text-[#0055FF]">TIM</div>
+        <div class="text-2xl font-bold tracking-tight text-[#00C278]">Unimed <span class="font-light">|&gt;</span></div>
+        <div class="text-2xl font-bold text-[#0092A8]">SICOOB</div>
+        <div class="text-2xl font-bold tracking-widest text-[#FF8800]">ArcelorMittal</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Flywheel Section - Soluções e Diferenciais -->
+  <section class="relative z-10 w-full bg-transparent" id="solucoes">
+    <div class="timeline-wrapper">
+      
+      <!-- Esquerda: Roda de Navegação -->
+      <div class="flywheel-col">
+        <div class="flywheel-bg-image"></div>
+        <div class="flywheel-overlay"></div>
+        
+        <div class="absolute inset-0 pointer-events-none z-0">
+          <div class="glow-pulse-ring"></div>
+          <div class="ring-satellites" style="width:480px;height:480px;left:50%;top:50%;transform:translate(-50%,-50%);"></div>
+          <div class="ring-satellites" style="width:580px;height:580px;left:50%;top:50%;transform:translate(-50%,-50%);border:1px dotted rgba(148,163,184,0.4);"></div>
+        </div>
+
+        <div id="flywheel" class="w-[480px] h-[480px] rounded-full flex items-center justify-center">
+          <!-- Hub central -->
+          <div class="absolute w-24 h-24 rounded-full bg-white/80 backdrop-blur-md border border-white shadow-[0_10px_30px_rgba(59,130,246,0.15)] flex items-center justify-center z-10">
+            <iconify-icon icon="solar:layers-bold-duotone" class="text-4xl text-blue-600"></iconify-icon>
+          </div>
+
+          <!-- Nodes (8 items, 45 degrees each) -->
+          <div class="node-wrapper absolute left-1/2 top-1/2" style="--deg:0deg;"><div class="node-content" data-day-index="0"><span class="node-icon"><iconify-icon icon="solar:server-square-linear"></iconify-icon></span><span class="node-number">01</span></div></div>
+          <div class="node-wrapper absolute left-1/2 top-1/2" style="--deg:45deg;"><div class="node-content" data-day-index="1"><span class="node-icon"><iconify-icon icon="solar:graph-new-linear"></iconify-icon></span><span class="node-number">02</span></div></div>
+          <div class="node-wrapper absolute left-1/2 top-1/2" style="--deg:90deg;"><div class="node-content" data-day-index="2"><span class="node-icon"><iconify-icon icon="solar:monitor-smartphone-linear"></iconify-icon></span><span class="node-number">03</span></div></div>
+          <div class="node-wrapper absolute left-1/2 top-1/2" style="--deg:135deg;"><div class="node-content" data-day-index="3"><span class="node-icon"><iconify-icon icon="solar:maximize-linear"></iconify-icon></span><span class="node-number">04</span></div></div>
+          <div class="node-wrapper absolute left-1/2 top-1/2" style="--deg:180deg;"><div class="node-content" data-day-index="4"><span class="node-icon"><iconify-icon icon="solar:hand-touch-linear"></iconify-icon></span><span class="node-number">05</span></div></div>
+          <div class="node-wrapper absolute left-1/2 top-1/2" style="--deg:225deg;"><div class="node-content" data-day-index="5"><span class="node-icon"><iconify-icon icon="solar:shield-check-linear"></iconify-icon></span><span class="node-number">06</span></div></div>
+          <div class="node-wrapper absolute left-1/2 top-1/2" style="--deg:270deg;"><div class="node-content" data-day-index="6"><span class="node-icon"><iconify-icon icon="solar:cpu-bolt-linear"></iconify-icon></span><span class="node-number">07</span></div></div>
+          <div class="node-wrapper absolute left-1/2 top-1/2" style="--deg:315deg;"><div class="node-content" data-day-index="7"><span class="node-icon"><iconify-icon icon="solar:star-circle-linear"></iconify-icon></span><span class="node-number">08</span></div></div>
+        </div>
+
+        <div class="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-3 z-20 pointer-events-none">
+          <span class="indicator-text text-blue-600 text-[11px] font-mono uppercase tracking-[0.2em] font-semibold bg-white/80 px-2 py-1 rounded backdrop-blur">FOCO ATIVO</span>
+          <div class="w-16 h-[2px] bg-blue-600 shadow-[0_0_8px_rgba(37,99,235,0.6)]"></div>
+        </div>
+      </div>
+
+      <!-- Direita: Conteúdo de Scroll -->
+      <div class="content-col" id="timeline-content">
+        
+        <!-- NOC 1 -->
+        <div class="day-card" data-day="0">
+          <div class="text-blue-600 text-[12px] font-mono font-bold tracking-[0.15em] uppercase mb-4 flex items-center gap-2">
+            <iconify-icon icon="solar:server-square-bold" width="18"></iconify-icon> Salas de Controle (NOC)
+          </div>
+          <h3 class="font-display text-3xl md:text-[2.5rem] font-bold tracking-tight text-slate-900 mb-5 leading-[1.1]">
+            Alta Exigência Empresarial
+          </h3>
+          <p class="text-[1.1rem] text-slate-600 leading-relaxed font-medium">
+            Desenvolvido para ambientes críticos que demandam acompanhamento preciso e ininterrupto de informações em tempo real.
+          </p>
+        </div>
+
+        <!-- NOC 2 -->
+        <div class="day-card" data-day="1">
+          <div class="text-blue-600 text-[12px] font-mono font-bold tracking-[0.15em] uppercase mb-4 flex items-center gap-2">
+            <iconify-icon icon="solar:graph-new-bold" width="18"></iconify-icon> Salas de Controle (NOC)
+          </div>
+          <h3 class="font-display text-3xl md:text-[2.5rem] font-bold tracking-tight text-slate-900 mb-5 leading-[1.1]">
+            Visão Global de Dados
+          </h3>
+          <p class="text-[1.1rem] text-slate-600 leading-relaxed font-medium">
+            Ideal para exibição de dashboards complexos, circuitos de monitoramento de segurança, painéis de BI e gráficos essenciais para tomada de decisão ágil.
+          </p>
+        </div>
+
+        <!-- NOC 3 / Tech -->
+        <div class="day-card" data-day="2">
+          <div class="text-blue-600 text-[12px] font-mono font-bold tracking-[0.15em] uppercase mb-4 flex items-center gap-2">
+            <iconify-icon icon="solar:monitor-smartphone-bold" width="18"></iconify-icon> Infraestrutura
+          </div>
+          <h3 class="font-display text-3xl md:text-[2.5rem] font-bold tracking-tight text-slate-900 mb-5 leading-[1.1]">
+            Servidores Gráficos
+          </h3>
+          <p class="text-[1.1rem] text-slate-600 leading-relaxed font-medium">
+            Especialistas em processamento para NOC, suportando projetos robustos com 6, 9, 12, 18 e até 24 saídas de vídeo simultâneas de altíssima resolução.
+          </p>
+        </div>
+
+        <!-- Digital Signage 1 -->
+        <div class="day-card" data-day="3">
+          <div class="text-emerald-600 text-[12px] font-mono font-bold tracking-[0.15em] uppercase mb-4 flex items-center gap-2">
+            <iconify-icon icon="solar:maximize-bold" width="18"></iconify-icon> Digital Signage
+          </div>
+          <h3 class="font-display text-3xl md:text-[2.5rem] font-bold tracking-tight text-slate-900 mb-5 leading-[1.1]">
+            Alto Impacto Visual
+          </h3>
+          <p class="text-[1.1rem] text-slate-600 leading-relaxed font-medium">
+            Sinalização digital para lojas, shoppings, vitrines, igrejas e salas de videoconferência. Prenda a atenção do seu público com painéis impressionantes.
+          </p>
+        </div>
+
+        <!-- Tech 1 -->
+        <div class="day-card" data-day="4">
+          <div class="text-slate-500 text-[12px] font-mono font-bold tracking-[0.15em] uppercase mb-4 flex items-center gap-2">
+            <iconify-icon icon="solar:hand-touch-bold" width="18"></iconify-icon> Diferencial Técnico
+          </div>
+          <h3 class="font-display text-3xl md:text-[2.5rem] font-bold tracking-tight text-slate-900 mb-5 leading-[1.1]">
+            Interatividade Touch
+          </h3>
+          <p class="text-[1.1rem] text-slate-600 leading-relaxed font-medium">
+            Referência nacional na fabricação de molduras touchscreen, transformamos seu Video Wall em um painel interativo gigante com até 10 toques simultâneos.
+          </p>
+        </div>
+
+        <!-- Tech 2 -->
+        <div class="day-card" data-day="5">
+          <div class="text-slate-500 text-[12px] font-mono font-bold tracking-[0.15em] uppercase mb-4 flex items-center gap-2">
+            <iconify-icon icon="solar:shield-check-bold" width="18"></iconify-icon> Diferencial Técnico
+          </div>
+          <h3 class="font-display text-3xl md:text-[2.5rem] font-bold tracking-tight text-slate-900 mb-5 leading-[1.1]">
+            Painéis Gigantes e Flexíveis
+          </h3>
+          <p class="text-[1.1rem] text-slate-600 leading-relaxed font-medium">
+            Montagem com monitores de borda ultrafina (46", 49", 55"), formando telas de 80" a 250". Abra uma única imagem perfeitamente distribuída em todas as telas.
+          </p>
+        </div>
+
+        <!-- Tech 3 -->
+        <div class="day-card" data-day="6">
+          <div class="text-slate-500 text-[12px] font-mono font-bold tracking-[0.15em] uppercase mb-4 flex items-center gap-2">
+            <iconify-icon icon="solar:cpu-bolt-bold" width="18"></iconify-icon> Diferencial Técnico
+          </div>
+          <h3 class="font-display text-3xl md:text-[2.5rem] font-bold tracking-tight text-slate-900 mb-5 leading-[1.1]">
+            Software Qualipix Collab
+          </h3>
+          <p class="text-[1.1rem] text-slate-600 leading-relaxed font-medium">
+            Gestão visual completa. Controle múltiplas entradas FullHD, distribua layouts dinâmicos e gerencie seu Video Wall de forma centralizada e intuitiva.
+          </p>
+        </div>
+
+        <!-- Brand / Finish -->
+        <div class="day-card" data-day="7">
+          <div class="text-blue-600 text-[12px] font-mono font-bold tracking-[0.15em] uppercase mb-4 flex items-center gap-2">
+            <iconify-icon icon="solar:star-circle-bold" width="18"></iconify-icon> A Marca Qualipix
+          </div>
+          <h3 class="font-display text-3xl md:text-[2.5rem] font-bold tracking-tight text-slate-900 mb-5 leading-[1.1]">
+            Acabamento Premium (Indoor)
+          </h3>
+          <p class="text-[1.1rem] text-slate-600 leading-relaxed font-medium">
+            Mais de 10 anos de mercado B2B. Suporte humanizado, instalação em todo o Brasil e materiais especiais para garantir um acabamento estético impecável.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA Section -->
+  <section class="py-24 bg-slate-900 relative overflow-hidden" id="contato">
+    <div class="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,rgba(96,165,250,0.8)_0%,transparent_70%)]"></div>
+    <div class="max-w-4xl mx-auto px-6 relative z-10 text-center">
+      <h2 class="font-display text-4xl md:text-5xl font-bold text-white mb-6 animate-on-scroll">
+        Pronto para transformar seu ambiente corporativo?
+      </h2>
+      <p class="text-xl text-slate-400 mb-10 max-w-2xl mx-auto animate-on-scroll delay-100">
+        Não vendemos apenas telas. Entregamos projetos integrados de Video Wall com a tecnologia e garantia Qualipix.
+      </p>
+      <a href="#" class="inline-flex h-16 items-center justify-center rounded-full bg-blue-600 px-10 text-[16px] font-bold tracking-wide text-white transition-all hover:bg-blue-500 hover:-translate-y-1 shadow-[0_10px_40px_rgba(37,99,235,0.4)] animate-on-scroll delay-200">
+        Solicite um Projeto Personalizado
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-slate-950 py-10 border-t border-slate-800">
+    <div class="max-w-[1200px] mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+      <div class="flex items-center gap-3 animate-on-scroll">
+        <div class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-600 text-white">
+          <iconify-icon icon="solar:monitor-camera-bold-duotone" width="16" height="16"></iconify-icon>
+        </div>
+        <span class="text-white font-display font-bold tracking-widest uppercase">Qualipix</span>
+      </div>
+      <p class="text-slate-500 text-sm animate-on-scroll delay-100">© 2026 Qualipix. Soluções Audiovisuais Interativas B2B.</p>
+    </div>
+  </footer>
+
+  <!-- GSAP & Lenis for Animation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
+
+  <script>
+    // Smooth Scrolling with Lenis
+    const lenis = new Lenis({ lerp: 0.08, smoothWheel: true });
+    
+    lenis.on('scroll', (e) => {
+      ScrollTrigger.update();
+      // Update progress bar
+      const progress = e.animatedScroll / (document.documentElement.scrollHeight - window.innerHeight);
+      document.getElementById('scrollProgress').style.transform = `scaleX(${progress})`;
+    });
+    
+    gsap.ticker.add((time) => { lenis.raf(time * 1000) });
+    gsap.ticker.lagSmoothing(0);
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Hero Video Scrubbing Logic — rAF Lerp approach for maximum fluidity
+    const heroSection = document.getElementById("hero-scrub-section");
+    const heroVideo = document.getElementById("hero-video");
+
+    async function preloadVideoAndScrub() {
+      try {
+        // 1. Fetch entire video into memory as blob for instant seeking
+        const response = await fetch("mp_.mp4");
+        const blob = await response.blob();
+        const blobURL = URL.createObjectURL(blob);
+        heroVideo.src = blobURL;
+
+        await new Promise((resolve) => {
+          heroVideo.onloadedmetadata = resolve;
+        });
+
+        // 2. Force full decode/buffer by briefly playing then pausing
+        heroVideo.muted = true;
+        heroVideo.currentTime = 0.001;
+        try {
+          await heroVideo.play();
+        } catch (_) {}
+        heroVideo.pause();
+        heroVideo.currentTime = 0.001;
+
+        const maxTime = heroVideo.duration - 0.1;
+
+        // 3. Track target time from ScrollTrigger, interpolate with rAF
+        let targetTime = 0;
+        let currentTime = 0;
+        const lerpFactor = 0.15; // Slightly faster for responsiveness
+
+        // ScrollTrigger distance increased for better "temporal resolution"
+        ScrollTrigger.create({
+          trigger: heroSection,
+          start: "top top",
+          end: "+=3500", 
+          pin: true,
+          scrub: true,
+          onUpdate: (self) => {
+            targetTime = self.progress * maxTime;
+          }
+        });
+
+        // 4. Optimized rAF loop: smoothly lerp currentTime toward target with seeking guard
+        let isProcessing = false;
+
+        function videoLerpLoop() {
+          // Linear interpolation
+          currentTime += (targetTime - currentTime) * lerpFactor;
+
+          // CRITICAL: Only seek if the video is NOT already seeking and readyState is good
+          // This avoids queueing seek requests which causes the stuttering you saw at the end
+          if (!heroVideo.seeking && Math.abs(currentTime - heroVideo.currentTime) > 0.01) {
+            heroVideo.currentTime = currentTime;
+          }
+
+          requestAnimationFrame(videoLerpLoop);
+        }
+
+        requestAnimationFrame(videoLerpLoop);
+
+      } catch (error) {
+        console.warn("Blob fetch falhou, usando fallback normal.");
+      }
+    }
+
+    if (heroSection && heroVideo) {
+      preloadVideoAndScrub();
+    }
+
+    // Nav blur on scroll
+    window.addEventListener('scroll', () => {
+      const nav = document.querySelector('header > div > div');
+      if (window.scrollY > 50) {
+        nav.classList.add('shadow-md', 'bg-white/80');
+      } else {
+        nav.classList.remove('shadow-md', 'bg-white/80');
+      }
+    });
+
+    // Flywheel Logic
+    const wheel = document.getElementById('flywheel');
+    const nodes = document.querySelectorAll('.node-content');
+    const cards = document.querySelectorAll('.day-card');
+    
+    const numNodes = nodes.length;
+    const angleStep = 360 / numNodes;
+    let activeIdx = -1;
+
+    // Centralized activation function — single source of truth
+    function activateCard(idx) {
+      if (idx === activeIdx || idx < 0 || idx >= numNodes) return;
+      activeIdx = idx;
+
+      // Rotate flywheel: node at idx*angleStep rotates to align with the indicator (3 o'clock)
+      const rotation = -(idx * angleStep);
+      wheel.style.setProperty('--wheel-rot', `${rotation}deg`);
+      
+      // Highlight active card
+      cards.forEach((c, i) => {
+        if (i === idx) {
+          c.classList.add('active-day');
+          c.style.opacity = "1";
+          c.style.transform = "translateY(0)";
+        } else {
+          c.classList.remove('active-day');
+          c.style.opacity = "0.2";
+          c.style.transform = "translateY(20px)";
+        }
+      });
+      
+      // Highlight active node
+      nodes.forEach((n, i) => {
+        if (i === idx) {
+          n.classList.add('active');
+        } else {
+          n.classList.remove('active');
+        }
+      });
+    }
+
+    // Init state
+    setTimeout(() => activateCard(0), 100);
+
+    // Use IntersectionObserver for precise card detection
+    const observerOptions = {
+      root: null,
+      threshold: 0.5,
+      rootMargin: '-20% 0px -20% 0px' // Tighter margin to trigger closer to center
+    };
+
+    const flywheelObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const idx = parseInt(entry.target.dataset.day, 10);
+          activateCard(idx);
+        }
+      });
+    }, observerOptions);
+
+    cards.forEach((card) => flywheelObserver.observe(card));
+
+    // Smooth anchor scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = this.getAttribute('href');
+        if(target && target !== '#') {
+          lenis.scrollTo(target, { offset: -80, duration: 1.2 });
+        }
+      });
+    });
+
+    // Animate on scroll Logic
+    const once = true;
+    if (!window.__inViewIO) {
+      window.__inViewIO = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("animate");
+            if (once) window.__inViewIO.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1, rootMargin: "0px 0px -5% 0px" });
+    }
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelectorAll(".animate-on-scroll").forEach((el) => {
+        window.__inViewIO.observe(el);
+      });
+    });
+  </script>
+</body>
+</html>
