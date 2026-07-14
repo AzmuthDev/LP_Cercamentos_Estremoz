@@ -1,0 +1,13 @@
+providers = ["node"]
+
+[phases.setup]
+nixPkgs = ["nodejs", "npm"]
+
+[phases.install]
+cmds = ["npm install -g serve"]
+
+[phases.build]
+cmds = []
+
+[start]
+cmd = "serve -s . -l 3000"
