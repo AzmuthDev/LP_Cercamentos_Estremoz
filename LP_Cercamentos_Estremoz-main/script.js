@@ -69,28 +69,10 @@ document.addEventListener('DOMContentLoaded', () => {
     initScrollVideo('scrollVideo2');
     initScrollVideo('scrollVideo3');
 
-    // Hero Scroll Expansion Logic
-    const heroExpansion = document.getElementById('heroExpansion');
-    if (heroExpansion) {
-        const stickyContainer = heroExpansion.querySelector('.scroll-expand-sticky');
-        
-        window.addEventListener('scroll', () => {
-            const rect = heroExpansion.getBoundingClientRect();
-            // A seção é bem alta, o scrollDistance é a altura total menos a altura da tela
-            const scrollDistance = rect.height - window.innerHeight;
-            
-            // rect.top é <= 0 quando a seção bate no topo
-            let progress = -rect.top / scrollDistance;
-            
-            // Travar entre 0 e 1
-            progress = Math.max(0, Math.min(1, progress));
-            
-            // Atualizar variável CSS
-            stickyContainer.style.setProperty('--scroll-prog', progress);
-        });
-        
-        // Trigger inicial para setar o valor
-        window.dispatchEvent(new Event('scroll'));
+    // Hero Video Playback Speed
+    const heroBgVideo = document.querySelector('.hero-bg-video');
+    if (heroBgVideo) {
+        heroBgVideo.playbackRate = 0.65; // Deixa o vídeo mais lento
     }
 
 });

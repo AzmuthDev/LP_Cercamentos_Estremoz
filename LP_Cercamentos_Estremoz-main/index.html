@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cercamentos Estremoz | Telas, Gradis e Portões de Excelência</title>
     <meta name="description" content="Desde 1999 oferecendo as melhores soluções em telas, gradis e portões automáticos em Belo Horizonte e região.">
-    <!-- Google Fonts: Outfit and Inter -->
+    <!-- Google Fonts: Outfit, Inter and Montserrat -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Phosphor Icons for modern icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link rel="stylesheet" href="styles.css?v=8">
+    <link rel="stylesheet" href="styles.css?v=12">
 </head>
 <body>
     <!-- Navbar -->
@@ -34,56 +34,28 @@
     </header>
 
     <main>
-        <!-- Hero Section (Scroll Expansion) -->
-        <section class="scroll-expand-hero" id="heroExpansion">
-            <div class="scroll-expand-sticky">
-                <!-- Background Layer -->
-                <div class="se-bg-layer">
-                    <video autoplay muted loop playsinline class="se-bg-video">
-                        <source src="Walking_parallel_to_wire_fence_202607011421.mp4" type="video/mp4">
-                    </video>
-                    <div class="se-bg-overlay"></div>
+        <!-- Standard Hero Section -->
+        <section id="hero" class="hero">
+            <video autoplay muted loop playsinline class="hero-bg-video">
+                <source src="hero_video.mp4" type="video/mp4">
+            </video>
+            <div class="hero-overlay"></div>
+            
+            <div class="hero-content">
+                <span class="hero-subtitle">Projetos Turnkey</span>
+                <h1 class="hero-title">Cercamentos & Proteção Perimetral</h1>
+                <p class="hero-text">Projetos para grandes obras, indústrias e condomínios de alto padrão.<br>Zero manutenção, máxima segurança.</p>
+                <div class="hero-buttons">
+                    <a href="#contato" class="btn-primary">Falar com Especialista</a>
+                    <a href="#obras" class="btn-secondary">Ver Portfólio</a>
                 </div>
-
-                <!-- Content Layer (Text and Central Video) -->
-                <div class="se-content-layer">
-                    <div class="se-center-box">
-                        <video autoplay muted loop playsinline class="se-center-video">
-                            <!-- Utilizamos o vídeo da calçada na cidade como central -->
-                            <source src="First-person_view_city_sidewalk_202607011500.mp4" type="video/mp4">
-                        </video>
-                        <div class="se-center-overlay"></div>
-                    </div>
-                    
-                    <div class="se-text-wrapper">
-                        <!-- Top Subtitle -->
-                        <div class="se-subtitle-row">
-                            <span class="se-subtitle se-left-slide">Projetos</span>
-                            <span class="se-subtitle se-right-slide">Turnkey</span>
-                        </div>
-                        
-                        <!-- Split Main Title -->
-                        <div class="se-title-row">
-                            <h1 class="se-title-left">Cercamentos &</h1>
-                            <h1 class="se-title-right">Proteção Perimetral</h1>
-                        </div>
-                    </div>
+            </div>
+            
+            <div class="scroll-indicator">
+                <div class="mouse">
+                    <div class="wheel"></div>
                 </div>
-
-                <!-- Call to action when fully expanded -->
-                <div class="se-cta-layer">
-                    <p class="se-cta-text">Projetos para grandes obras, indústrias e condomínios de alto padrão.<br>Zero manutenção, máxima segurança.</p>
-                    <div class="hero-buttons">
-                        <a href="#contato" class="btn-primary">Falar com Especialista</a>
-                        <a href="#obras" class="btn-secondary">Ver Portfólio</a>
-                    </div>
-                </div>
-                <div class="scroll-indicator se-indicator">
-                    <div class="mouse">
-                        <div class="wheel"></div>
-                    </div>
-                    <span>Role para expandir</span>
-                </div>
+                <span>Role para expandir</span>
             </div>
         </section>
 
@@ -354,6 +326,6 @@
         </div>
     </footer>
 
-    <script src="script.js?v=11"></script>
+    <script src="script.js?v=12"></script>
 </body>
 </html>
