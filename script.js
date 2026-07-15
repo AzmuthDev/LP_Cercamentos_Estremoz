@@ -9,6 +9,23 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Mobile Menu Toggle
+    const mobileBtn = document.querySelector('.mobile-menu-btn');
+    if (mobileBtn) {
+        mobileBtn.addEventListener('click', () => {
+            navbar.classList.toggle('mobile-open');
+            // Change icon
+            const icon = mobileBtn.querySelector('i');
+            if (navbar.classList.contains('mobile-open')) {
+                icon.classList.remove('ph-list');
+                icon.classList.add('ph-x');
+            } else {
+                icon.classList.remove('ph-x');
+                icon.classList.add('ph-list');
+            }
+        });
+    }
+
     // Intersection Observer for scroll animations
     const observerOptions = {
         root: null,
