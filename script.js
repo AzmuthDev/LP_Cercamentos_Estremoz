@@ -84,7 +84,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     initScrollVideo('scrollVideo');
     initScrollVideo('scrollVideo2');
-    initScrollVideo('scrollVideo3');
 
     // Hero Video Playback Speed
     const heroBgVideo = document.querySelector('.hero-bg-video');
