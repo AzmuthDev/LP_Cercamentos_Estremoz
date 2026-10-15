@@ -23,7 +23,7 @@
         rel="stylesheet">
     <!-- Phosphor Icons for modern icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link rel="stylesheet" href="styles.css?v=14">
+    <link rel="stylesheet" href="styles.css?v=17">
 </head>
 
 <body>
@@ -45,7 +45,7 @@
                 <a href="#footer">Contato</a>
             </nav>
             <div class="nav-actions">
-                <button class="btn-primary">Solicitar Orçamento</button>
+                <a href="https://wa.me/5531998366239?text=Ol%C3%A1!%20Gostaria%20de%20solicitar%20um%20or%C3%A7amento." target="_blank" rel="noopener" class="btn-primary">Solicitar Orçamento</a>
             </div>
             <button class="mobile-menu-btn" aria-label="Menu" aria-expanded="false">
                 <i class="ph ph-list"></i>
@@ -66,7 +66,7 @@
                 <p class="hero-text">Projetos para grandes obras, indústrias e condomínios de alto padrão. <br>Zero
                     manutenção, máxima segurança.</p>
                 <div class="hero-buttons">
-                    <a href="#footer" class="btn-primary">Falar com Especialista</a>
+                    <a href="https://wa.me/5531998366239?text=Ol%C3%A1!%20Gostaria%20de%20falar%20com%20um%20especialista." target="_blank" rel="noopener" class="btn-primary">Falar com Especialista</a>
                     <a href="#case-study" class="btn-secondary">Ver Portfólio</a>
                 </div>
             </div>
@@ -82,18 +82,18 @@
             <div class="search-bar-wrapper animate-up delay-2">
                 <div class="search-bar">
                     <div class="search-item">
-                        <label>Material</label>
-                        <select>
-                            <option>Selecione</option>
-                            <option>Gradis</option>
-                            <option>Telas</option>
-                            <option>Portões</option>
-                        </select>
+                        <label for="modelTrigger">Material</label>
+                        <button type="button" id="modelTrigger" class="model-trigger" aria-haspopup="dialog"
+                            aria-expanded="false" aria-controls="modelPicker">
+                            <span class="model-trigger-thumb" aria-hidden="true" hidden></span>
+                            <span class="model-trigger-text">Selecione</span>
+                            <i class="ph ph-caret-down" aria-hidden="true"></i>
+                        </button>
                     </div>
                     <div class="divider"></div>
                     <div class="search-item">
-                        <label>Altura</label>
-                        <select>
+                        <label for="heightSelect">Altura</label>
+                        <select id="heightSelect">
                             <option>Selecione</option>
                             <option>1,03m</option>
                             <option>1,53m</option>
@@ -108,7 +108,7 @@
                             <option>Definir</option>
                         </select>
                     </div>
-                    <button class="btn-search"><i class="ph ph-magnifying-glass"></i> Buscar</button>
+                    <button type="button" class="btn-search" id="searchButton"><i class="ph ph-magnifying-glass"></i> Buscar</button>
                 </div>
             </div>
         </section>
@@ -312,7 +312,35 @@
         </div>
     </footer>
 
-    <script src="script.js?v=13"></script>
+    <!-- Model picker (opened from the search bar's Material field) -->
+    <div class="model-picker" id="modelPicker" role="dialog" aria-labelledby="modelPickerTitle" hidden>
+        <div class="model-picker-backdrop" data-picker-close></div>
+        <div class="model-picker-panel">
+            <div class="model-picker-head">
+                <h3 id="modelPickerTitle">Escolha o modelo</h3>
+                <button type="button" class="model-picker-close" data-picker-close aria-label="Fechar">
+                    <i class="ph ph-x" aria-hidden="true"></i>
+                </button>
+            </div>
+            <div class="model-picker-body">
+                <div class="model-list" role="radiogroup" aria-labelledby="modelPickerTitle"></div>
+                <div class="model-preview" aria-live="polite">
+                    <div class="model-preview-media"></div>
+                    <div class="model-preview-info">
+                        <span class="model-preview-group"></span>
+                        <h4 class="model-preview-name"></h4>
+                        <p class="model-preview-desc"></p>
+                        <dl class="model-specs"></dl>
+                    </div>
+                </div>
+            </div>
+            <div class="model-picker-foot">
+                <button type="button" class="btn-primary" data-picker-confirm>Usar este modelo</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js?v=15"></script>
 </body>
 
 </html>

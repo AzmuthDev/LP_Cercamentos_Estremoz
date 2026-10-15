@@ -4,6 +4,7 @@
     --primary-dark: #0f3062; /* High-contrast deeper Blue */
     --bg-cream: #F8F9F5; /* Light Cream/Off-White */
     --bg-white: #FFFFFF;
+    --paper: #FBFCFE; /* Drafting paper behind the model drawings */
     --text-dark: #1F2937;
     --text-muted: #6B7280;
     --border-color: #E5E7EB;
@@ -99,6 +100,13 @@ button {
     font-weight: 500;
     font-size: 1rem;
     box-shadow: 0 4px 14px rgba(22, 72, 148, 0.3);
+}
+
+a.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
 
 .btn-primary:hover {
@@ -390,6 +398,383 @@ button {
 .btn-search:hover {
     background: var(--primary-dark);
     transform: scale(1.02);
+}
+
+/* Material field — opens the model picker */
+.model-trigger {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    min-width: 0;
+    padding: 0;
+    background: transparent;
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--text-dark);
+    text-align: left;
+}
+
+.model-trigger-thumb {
+    width: 28px;
+    height: 28px;
+    flex: none;
+    border-radius: 50%;
+    overflow: hidden;
+    background: var(--paper);
+    box-shadow: 0 0 0 2px var(--bg-white), 0 0 0 3px rgba(22, 72, 148, 0.25);
+}
+
+.model-trigger-thumb svg,
+.model-option-thumb svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.model-trigger-thumb[hidden] { display: none; }
+
+.model-trigger-text {
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.model-trigger .ph-caret-down {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    transition: transform 0.25s ease;
+}
+
+.model-trigger[aria-expanded="true"] .ph-caret-down {
+    transform: rotate(180deg);
+}
+
+.model-trigger:focus-visible,
+.search-item select:focus-visible,
+.btn-search:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 4px;
+    border-radius: 8px;
+}
+
+/* Model picker — floats over the hero, aligned with the search bar */
+.model-picker {
+    position: fixed;
+    inset: 0;
+    z-index: 900;
+    pointer-events: none;
+}
+
+.model-picker[hidden] { display: none; }
+
+.model-picker-backdrop {
+    position: absolute;
+    inset: 0;
+    pointer-events: auto;
+}
+
+.model-picker-panel {
+    position: absolute;
+    top: var(--picker-top, 50%);
+    left: var(--picker-left, 50%);
+    width: var(--picker-width, 960px);
+    pointer-events: auto;
+    background: var(--bg-white);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 24px 64px rgba(15, 48, 98, 0.22), 0 2px 8px rgba(15, 48, 98, 0.08);
+    padding: 20px 24px 24px;
+    opacity: 0;
+    transform: translateY(var(--picker-shift, 10px)) scale(0.985);
+    transform-origin: var(--picker-origin, bottom center);
+    transition: opacity 0.22s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.model-picker.is-open .model-picker-panel {
+    opacity: 1;
+    transform: none;
+}
+
+.model-picker-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.model-picker-head h3 {
+    font-size: 1.25rem;
+    color: var(--primary-dark);
+}
+
+.model-picker-close {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-cream);
+    color: var(--text-dark);
+    font-size: 1.1rem;
+}
+
+.model-picker-close:hover { background: var(--border-color); }
+
+/* Desktop: list on the left (scrolls if space is short), preview and action on the right */
+.model-picker-panel {
+    display: grid;
+    grid-template-columns: 280px minmax(0, 1fr);
+    grid-template-rows: auto auto 1fr;
+    grid-template-areas:
+        "head head"
+        "list preview"
+        "list foot";
+    column-gap: 24px;
+}
+
+.model-picker-head { grid-area: head; }
+.model-picker-body { display: contents; }
+
+/* Model list */
+.model-list {
+    grid-area: list;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    max-height: var(--picker-list-max, none);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    margin-left: -6px;
+    padding-left: 6px;
+}
+
+.model-group-name {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    padding: 8px 10px 2px;
+}
+
+.model-group-name:first-child { padding-top: 0; }
+
+.model-option {
+    display: grid;
+    grid-template-columns: 44px 1fr 18px;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 7px 10px 7px 7px;
+    border-radius: 14px;
+    background: transparent;
+    text-align: left;
+    color: var(--text-dark);
+    transition: background-color 0.2s ease;
+}
+
+.model-option-thumb {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--paper);
+    border: 1px solid var(--border-color);
+}
+
+.model-option-name {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: 0.98rem;
+    font-weight: 600;
+    line-height: 1.25;
+}
+
+.model-option-hint {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    line-height: 1.35;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.model-option > span { min-width: 0; }
+
+.model-option .ph-check-circle {
+    font-size: 1.15rem;
+    color: var(--primary-color);
+    opacity: 0;
+    transform: scale(0.6);
+    transition: opacity 0.2s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.model-option:hover,
+.model-option.is-previewed { background: var(--bg-cream); }
+
+.model-option[aria-checked="true"] { background: rgba(22, 72, 148, 0.08); }
+
+.model-option[aria-checked="true"] .ph-check-circle {
+    opacity: 1;
+    transform: none;
+}
+
+.model-option:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: -2px;
+}
+
+/* Live preview */
+.model-preview {
+    grid-area: preview;
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    gap: 24px;
+    align-items: start;
+}
+
+.model-preview-media {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    /* Papel de desenho técnico: quadriculado leve em azul institucional */
+    background-color: var(--paper);
+    background-image:
+        linear-gradient(rgba(22, 72, 148, 0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(22, 72, 148, 0.07) 1px, transparent 1px);
+    background-size: 20px 20px;
+    background-position: -1px -1px;
+}
+
+.model-preview-media .model-drawing {
+    width: 100%;
+    height: 100%;
+    display: block;
+    transition: opacity 0.14s ease;
+}
+
+/* Traços do desenho */
+.model-drawing .ln {
+    fill: none;
+    stroke: var(--accent);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+.model-drawing .w1 { stroke-width: 1.1; }
+.model-drawing .w2 { stroke-width: 2; }
+.model-drawing .w3 { stroke-width: 3; }
+.model-drawing .w4 { stroke-width: 4; }
+.model-drawing .ink { stroke: var(--primary-dark); }
+.model-drawing .muted { stroke: #c5ccd6; }
+.model-drawing .hatch { stroke: #b6bec9; stroke-width: 1; }
+.model-drawing .fill-accent { fill: var(--accent); }
+.model-drawing .fill-ink { fill: #1f2937; }
+.model-drawing .fill-steel { fill: #9aa5b1; }
+.model-drawing .fill-clip { fill: var(--bg-white); stroke: var(--accent); stroke-width: 1.5; }
+.model-drawing .note-line { fill: none; stroke: var(--text-muted); stroke-width: 1; }
+.model-drawing .note-line.dim { marker-start: none; stroke: var(--primary-dark); }
+.model-drawing .note-dot { fill: var(--text-muted); }
+.model-drawing text {
+    font-family: var(--font-body);
+    font-size: 16px;
+    font-weight: 500;
+    fill: var(--text-dark);
+}
+
+/* Miniaturas: só o detalhe ampliado, sem cotas */
+.model-drawing.is-thumb .d-note { display: none; }
+.model-drawing.is-thumb .w1 { stroke-width: 1.6; }
+
+/* O desenho se constrói: chão, estrutura, malha e por fim as cotas */
+.model-preview-media.is-drawing .ln {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: draw-line 0.7s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+.model-preview-media.is-drawing .stage-0 .ln { animation-duration: 0.5s; }
+.model-preview-media.is-drawing .stage-1 .ln { animation-delay: 0.12s; }
+.model-preview-media.is-drawing .stage-2 .ln { animation-delay: 0.4s; }
+.model-preview-media.is-drawing .stage-fill > * {
+    transform-box: fill-box;
+    transform-origin: bottom;
+    animation: rise-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.05s both;
+}
+.model-preview-media.is-drawing .d-note {
+    animation: fade-in 0.4s ease 0.75s both;
+}
+
+@keyframes draw-line { to { stroke-dashoffset: 0; } }
+@keyframes rise-in { from { transform: scaleY(0); opacity: 0; } }
+@keyframes fade-in { from { opacity: 0; } }
+
+.model-preview-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-top: 4px;
+    transition: opacity 0.2s ease;
+}
+
+.model-preview.is-swapping .model-drawing { opacity: 0; }
+
+.model-preview.is-swapping .model-preview-info { opacity: 0; }
+
+.model-preview-group {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--primary-color);
+}
+
+.model-preview-name {
+    font-size: 1.5rem;
+    color: var(--primary-dark);
+    line-height: 1.2;
+}
+
+.model-preview-desc {
+    font-size: 0.92rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 6px;
+}
+
+.model-specs {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 16px;
+    font-size: 0.88rem;
+}
+
+.model-specs dt,
+.model-specs dd {
+    padding: 8px 0;
+    border-top: 1px solid var(--border-color);
+}
+
+.model-specs dt { color: var(--text-muted); }
+.model-specs dd { color: var(--text-dark); font-weight: 500; }
+
+.model-picker-foot {
+    grid-area: foot;
+    align-self: start;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 16px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .model-picker-panel,
+    .model-preview-media .model-drawing,
+    .model-preview-info,
+    .model-option .ph-check-circle { transition: none; }
+    .model-preview-media.is-drawing .ln,
+    .model-preview-media.is-drawing .stage-fill > *,
+    .model-preview-media.is-drawing .d-note { animation: none; }
 }
 
 /* Scroll Video Section */
@@ -909,6 +1294,59 @@ button {
         padding: 0;
         font-size: 0.95rem;
     }
+
+    .model-trigger { font-size: 0.95rem; gap: 6px; padding: 4px 0; }
+    .model-trigger-thumb { width: 22px; height: 22px; }
+
+    /* Model picker becomes a bottom sheet */
+    .model-picker-backdrop {
+        background: rgba(15, 48, 98, 0.35);
+        backdrop-filter: blur(2px);
+        opacity: 0;
+        transition: opacity 0.25s ease;
+    }
+    .model-picker.is-open .model-picker-backdrop { opacity: 1; }
+    .model-picker-panel {
+        top: auto;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        max-height: 88svh;
+        display: flex;
+        flex-direction: column;
+        border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+        padding: 10px 16px calc(16px + env(safe-area-inset-bottom));
+        transform: translateY(100%);
+        transition: opacity 0.2s ease, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .model-picker-panel::before {
+        content: '';
+        width: 40px;
+        height: 4px;
+        border-radius: 4px;
+        background: var(--border-color);
+        margin: 0 auto 10px;
+        flex: none;
+    }
+    .model-picker-head { margin-bottom: 12px; }
+    .model-picker-head h3 { font-size: 1.15rem; }
+    .model-picker-body {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        margin: 0 -16px;
+        padding: 0 16px 4px;
+    }
+    .model-preview { order: -1; grid-template-columns: 1fr; gap: 12px; }
+    .model-preview-media { aspect-ratio: 4 / 3; }
+    .model-preview-name { font-size: 1.25rem; }
+    .model-preview-desc { margin-bottom: 0; }
+    .model-list { max-height: none; overflow: visible; margin-left: 0; padding-left: 0; }
+    .model-option { padding: 8px 10px 8px 8px; }
+    .model-picker-foot { margin-top: 12px; flex: none; }
+    .model-picker-foot .btn-primary { width: 100%; min-height: 48px; }
 
     /* Scroll video sections — video pinned under the navbar while the cards slide beneath it */
     .scroll-video-section { padding: 32px 0 24px; }
