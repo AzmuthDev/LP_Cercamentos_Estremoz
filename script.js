@@ -166,6 +166,10 @@ document.addEventListener('DOMContentLoaded', () => {
 // e envia a escolha (modelo + altura) para o WhatsApp no botão Buscar.
 const WHATSAPP_NUMBER = '5531998366239';
 
+// Alturas oferecidas no campo Altura; cada modelo pode ter as suas (ex.: Telas)
+const DEFAULT_HEIGHTS = ['1,03m', '1,53m', '2,03m', '2,43m'];
+const TELA_HEIGHTS = ['1,00m', '1,50m', '1,80m', '2,00m'];
+
 const MODELS = [
     {
         id: 'gradil-pvc',
@@ -205,6 +209,7 @@ const MODELS = [
         accent: '#7b8794',
         thumb: '36 80 136 136',
         draw: () => drawTela({ coated: false }),
+        heights: TELA_HEIGHTS,
         description: 'Arame de aço eletrossoldado com galvanização tripla por imersão a quente. Segurança e economia para cercar lotes e obras.',
         specs: [
             ['Arame', 'Aço eletrossoldado'],
@@ -219,6 +224,7 @@ const MODELS = [
         accent: '#3a7d44',
         thumb: '36 92 128 128',
         draw: () => drawTela({ coated: true }),
+        heights: TELA_HEIGHTS,
         description: 'Arame galvanizado por imersão a quente, eletrossoldado e revestido em PVC de alta aderência: mais durabilidade e um acabamento bonito.',
         specs: [
             ['Arame', 'Galvanizado e eletrossoldado'],
@@ -500,6 +506,16 @@ function initModelPicker() {
         }, 140);
     };
 
+    // Troca as opções de Altura conforme o modelo, mantendo a escolha se ela ainda existir
+    const updateHeights = (model) => {
+        if (!heightSelect) return;
+        const heights = model.heights || DEFAULT_HEIGHTS;
+        const current = heightSelect.selectedIndex > 0 ? heightSelect.value : null;
+        const placeholder = heightSelect.options[0];
+        heightSelect.replaceChildren(placeholder, ...heights.map(h => new Option(h)));
+        heightSelect.value = heights.includes(current) ? current : placeholder.value;
+    };
+
     const setRovingFocus = (option) => {
         options.forEach(o => { o.tabIndex = o === option ? 0 : -1; });
     };
@@ -516,6 +532,7 @@ function initModelPicker() {
         triggerThumb.innerHTML = renderDrawing(model, { thumb: true });
         triggerThumb.hidden = false;
         triggerText.textContent = model.name;
+        updateHeights(model);
         // No celular a prévia fica no topo da folha: volta até ela para mostrar a troca
         if (isMobile()) body.scrollTo({ top: 0, behavior: reducedMotion() ? 'auto' : 'smooth' });
     };
