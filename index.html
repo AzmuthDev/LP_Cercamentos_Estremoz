@@ -56,8 +56,10 @@
     <main>
         <!-- Standard Hero Section -->
         <section id="hero" class="hero">
+            <!-- Telas em pé (celular, tablet vertical) usam o vídeo vertical; as demais, o horizontal -->
             <video autoplay muted loop playsinline class="hero-bg-video">
-                <source src="hero_video.mp4?v=2" type="video/mp4">
+                <source src="hero_video.mp4?v=2" type="video/mp4" media="(orientation: portrait)">
+                <source src="hero_video_horizontal.mp4?v=1" type="video/mp4">
             </video>
             <div class="hero-overlay"></div>
 
